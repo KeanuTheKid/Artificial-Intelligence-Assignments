@@ -1,0 +1,247 @@
+\documentclass[paper=a4, fontsize=11pt]{scrartcl}
+
+\usepackage[T1]{fontenc}
+\usepackage{fourier}
+\usepackage[english]{babel}
+\usepackage{amsmath,amsfonts,amsthm}
+
+\usepackage{sectsty}
+\allsectionsfont{\centering \normalfont\scshape}
+
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\fancyhead{}
+\fancyfoot[L]{}
+\fancyfoot[C]{}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{13.6pt}
+
+\setlength\parindent{0pt}
+
+% Title helpers
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}}
+
+\title{
+\normalfont \normalsize
+\textsc{Artificial Intelligence - 4,906,1.00 - Sheet 3 Spring 2026} \\[10pt]
+\horrule{0.5pt} \\[0.4cm]
+\huge Solutions \\[-2pt]
+\horrule{2pt} \\[0.5cm]
+}
+
+\author{
+\textbf{Group 12}\\
+Valeria Pointet\\
+Keanu Belo da Silva
+}
+
+\date{\normalsize\today}
+
+\begin{document}
+\maketitle
+
+% -------------------- 1 --------------------
+\section{Measuring Performance}
+
+\subsection*{Question 1.1}
+Precision measures how many predicted positives are actually correct.
+
+\[
+\text{Precision} = \frac{TP}{TP + FP}
+\]
+
+Recall measures how many actual positives were found.
+
+\[
+\text{Recall} = \frac{TP}{TP + FN}
+\]
+
+Higher precision is preferable when false positives are costly.  
+Higher recall is preferable when missing positives is costly.
+
+A metric that combines both is the F1-score.
+
+\[
+F1 = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+\]
+
+\subsection*{Question 1.2}
+Top-k accuracy means that a prediction is counted as correct if the true label is among the top k predicted labels.
+
+Top-5 accuracy is often preferred when:
+\begin{itemize}
+    \item there are many classes
+    \item several classes are similar
+    \item one exact prediction is too strict
+\end{itemize}
+
+\subsection*{Question 1.3}
+The system retrieves 6 relevant documents out of 10 retrieved documents.
+
+\[
+\text{Precision} = \frac{6}{10} = 0.6
+\]
+
+There are 15 relevant documents in total.
+
+\[
+\text{Recall} = \frac{6}{15} = 0.4
+\]
+
+So the F1-score is:
+
+\[
+F1 = \frac{2 \cdot 0.6 \cdot 0.4}{0.6 + 0.4} = 0.48
+\]
+
+So the F1-score is:
+
+\[
+0.48
+\]
+
+\subsection*{Question 1.4}
+The total number of samples is:
+
+\[
+40+5+5+6+30+4+3+7+25 = 125
+\]
+
+The correctly classified samples are the diagonal entries:
+
+\[
+40+30+25 = 95
+\]
+
+So the overall accuracy is:
+
+\[
+\frac{95}{125} = 0.76
+\]
+
+Now we compute recall for each class.
+
+For class A:
+
+\[
+\frac{40}{40+5+5} = \frac{40}{50} = 0.8
+\]
+
+For class B:
+
+\[
+\frac{30}{6+30+4} = \frac{30}{40} = 0.75
+\]
+
+For class C:
+
+\[
+\frac{25}{3+7+25} = \frac{25}{35} \approx 0.71
+\]
+
+So class A has the highest recall.
+
+% -------------------- 2 --------------------
+\section{Confidence-based Benchmarking}
+
+\subsection*{Question 2.1}
+A sample is classified as positive if its score is greater than or equal to the threshold.
+
+There are 3 positive samples and 3 negative samples.
+
+\textbf{Threshold $t=1.0$}
+
+No sample is classified as positive.
+
+\[
+TP=0,\quad FP=0,\quad TN=3,\quad FN=3
+\]
+
+\[
+TPR=\frac{0}{3}=0,\quad FPR=\frac{0}{3}=0
+\]
+
+\textbf{Threshold $t=0.8$}
+
+Positive samples: 1, 2
+
+\[
+TP=1,\quad FP=1,\quad TN=2,\quad FN=2
+\]
+
+\[
+TPR=\frac{1}{3},\quad FPR=\frac{1}{3}
+\]
+
+\textbf{Threshold $t=0.6$}
+
+Positive samples: 1, 2, 3, 4
+
+\[
+TP=2,\quad FP=2,\quad TN=1,\quad FN=1
+\]
+
+\[
+TPR=\frac{2}{3},\quad FPR=\frac{2}{3}
+\]
+
+\textbf{Threshold $t=0.4$}
+
+Positive samples: 1, 2, 3, 4, 5
+
+\[
+TP=3,\quad FP=2,\quad TN=1,\quad FN=0
+\]
+
+\[
+TPR=1,\quad FPR=\frac{2}{3}
+\]
+
+\textbf{Threshold $t=0.3$}
+
+All samples are classified as positive.
+
+\[
+TP=3,\quad FP=3,\quad TN=0,\quad FN=0
+\]
+
+\[
+TPR=1,\quad FPR=1
+\]
+
+So the table is:
+
+\[
+\begin{array}{c|c|c}
+\text{Threshold} & \text{TPR} & \text{FPR} \\
+\hline
+1.0 & 0 & 0 \\
+0.8 & \frac{1}{3} & \frac{1}{3} \\
+0.6 & \frac{2}{3} & \frac{2}{3} \\
+0.4 & 1 & \frac{2}{3} \\
+0.3 & 1 & 1
+\end{array}
+\]
+
+The ROC points are:
+
+\[
+(0,0),\left(\frac{1}{3},\frac{1}{3}\right),\left(\frac{2}{3},\frac{2}{3}\right),\left(\frac{2}{3},1\right),(1,1)
+\]
+
+The point $(0,1)$ is the ideal point on the ROC curve.  
+It means no false positives and all positives found.
+
+\subsection*{Question 2.2}
+PR curves are more adequate for imbalanced classification problems.
+
+This is because ROC curves can still look good when there are many true negatives.
+
+PR curves focus on precision and recall.  
+So they show better how well the model finds the positive class.
+
+A typical example is fraud detection.
+
+\end{document}
